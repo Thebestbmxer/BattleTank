@@ -50,9 +50,5 @@ void UAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		FVector AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Aim Solved Found"))
-	}
 	//IF no Solution found do nothing
 }

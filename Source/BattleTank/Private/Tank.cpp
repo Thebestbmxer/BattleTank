@@ -2,6 +2,10 @@
 
 #include "Tank.h"
 #include "AimingComponent.h"
+#include "TankBarrel.h"
+#include "Projectile.h"
+#include "BattleTank.h"
+#include "Engine/World.h"
 
 
 // Sets default values
@@ -15,14 +19,32 @@ ATank::ATank()
 	LaunchSpeed = LaunchSpeed * 100;	//Convert fomr cm/s to m/s
 }
 
-void ATank::SetBarrelReference(UTankBarrel * BarrelToSet) { TankAimingComponent->SetBarrelReference(BarrelToSet); }
-void ATank::SetTurretReference(UTankTurret * TurretToSet) { TankAimingComponent->SetTurretReferance(TurretToSet); }
-
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+}
+
+void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
+{
+	TankAimingComponent->SetBarrelReference(BarrelToSet);
+	Barrel = BarrelToSet;
+}
+
+void ATank::SetTurretReference(UTankTurret * TurretToSet) { TankAimingComponent->SetTurretReferance(TurretToSet); }
+
+void ATank::Fire()
+{
+	bool bIsReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime > ReloadTime);
+	if (Barrel && bIsReloaded)
+	{
+		//Spawn Projectile
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Barrel->GetSocketLocation(FName("BarrelOpening")), Barrel->GetSocketRotation(FName("BarrelOpening")));
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = GetWorld()->GetTimeSeconds();
+	}
 }
 
 // Called to bind functionality to input

@@ -11,6 +11,15 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!GetControlledTank())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController not possesing a tank"))
+			return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController possesing: %s"), *(GetControlledTank()->GetName()))
+	}
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -24,7 +33,7 @@ ATank* ATankPlayerController::GetControlledTank() const { return Cast<ATank>(Get
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) { return; }
+	if (!GetControlledTank()) {return; }
 
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation))	//Going to raytrace due to function
