@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Test Tutorial Project Settings
 
 #pragma once
 
@@ -7,8 +7,8 @@
 #include "Tank.generated.h"
 
 class UTankBarrel;
-class UTankTurret;
 class UAimingComponent;
+class UTankMovementComponent;
 class AProjectile;
 
 UCLASS()
@@ -17,42 +17,34 @@ class BATTLETANK_API ATank : public APawn
 	GENERATED_BODY()
 
 public:
+	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable)
+		void Fire();
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	UAimingComponent* TankAimingComponent = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* TankTankMovementComponent = nullptr;
+
+private:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	UFUNCTION(BlueprintCallable, Category = SetUp)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
-	UFUNCTION(BlueprintCallable, Category = SetUp)
-	void SetTurretReference(UTankTurret* TurretToSet);
-
-	UFUNCTION(BlueprintCallable)
-	void Fire();
-
-	void AimAt(FVector HitLocation);
-protected:
-	UAimingComponent* TankAimingComponent = nullptr;
-
-private:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UPROPERTY(EditDefaultsOnly, Category = SetUp)
+	UPROPERTY(EditDefaultsOnly, Category = "SetUp")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	//Value Shoule be in Meters Per Second
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 40;	//cm Per Second
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 4000;	//cm Per Second
 
-	//Local Barrel referance for spawning projectile
-	UTankBarrel* Barrel = nullptr;
-	
 	//Time in Seconds to reload
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float ReloadTime;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float ReloadTime = 3;
 
-	float LastFireTime = 3;
+	UTankBarrel* Barrel = nullptr; //TODO: Remove value
+
+	float LastFireTime = 0;
 };

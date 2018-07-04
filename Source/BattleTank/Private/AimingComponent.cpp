@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Test Tutorial Project Settings
 
 #include "AimingComponent.h"
 #include "TankBarrel.h"
@@ -16,20 +16,16 @@ UAimingComponent::UAimingComponent()
 	// ...
 }
 
-void UAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
+void UAimingComponent::Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
 {
-	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
-}
-
-void UAimingComponent::SetTurretReferance(UTankTurret * TurretToSet)
-{
-	if (!TurretToSet) { return; }
 	Turret = TurretToSet;
 }
 
 void UAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
+	if (!Barrel || !Turret) { return; }
+
 	FRotator BarrelRotaor = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = AimDirection.Rotation();
 	FRotator DeltaRotator = AimAsRotator - BarrelRotaor;
